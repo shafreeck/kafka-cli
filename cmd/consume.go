@@ -39,7 +39,8 @@ var consumeCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		topics := args
 		if len(topics) == 0 {
-			fmt.Println("topic is required")
+			fmt.Println("topic is required\n")
+			displayTopics()
 			os.Exit(-1)
 		}
 
