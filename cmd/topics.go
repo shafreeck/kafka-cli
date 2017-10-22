@@ -32,7 +32,7 @@ type Topic struct {
 func (t Topic) String() string {
 	topic := fmt.Sprintf("%-15s\t", t.Name)
 	for _, p := range t.Partitions {
-		topic += fmt.Sprintf("%d%d:%d\t", p, t.Replicas[p], t.LatestOffset[p])
+		topic += fmt.Sprintf("%d%d:%d ", p, t.Replicas[p], t.LatestOffset[p])
 	}
 	return topic
 }
