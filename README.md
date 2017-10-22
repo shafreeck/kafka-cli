@@ -1,5 +1,11 @@
 # kafka-cli
 
+## Install
+
+```
+go get github.com/shafreeck/kafka-cli
+```
+
 ## List all topics
 
 ```
