@@ -125,5 +125,5 @@ func init() {
 	consumeCmd.Flags().DurationVar(&cfg.Consumer.Offsets.CommitInterval, "offsets.commitinterval", 1*time.Second, "how frequently to commit updated offsets")
 	consumeCmd.Flags().Int64Var(&cfg.Consumer.Offsets.Initial, "offsets.initial", sarama.OffsetNewest, "the initial offset to use if no offset was previously committed")
 	consumeCmd.Flags().Int64Var(&consumerOpt.Offset, "offset", sarama.OffsetNewest, "offset to consume")
-	consumeCmd.Flags().Int32Var(&consumerOpt.Partition, "partition", -1, "offset to consume")
+	consumeCmd.Flags().Int32Var(&consumerOpt.Partition, "partition", -1, "partition to consume")
 }
