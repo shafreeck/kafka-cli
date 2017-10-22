@@ -6,6 +6,37 @@
 go get github.com/shafreeck/kafka-cli
 ```
 
+## Usage
+
+```
+./kafka-cli --help
+kafka-cli is a console util tool to access kafka cluster
+
+Usage:
+  kafka-cli [command]
+
+Available Commands:
+  consume     consume from kafka
+  produce     TODO
+  topics      list all topics
+
+Flags:
+      --brokers string                    broker list, delimited by comma (default "127.0.0.1:9092")
+      --buffersize int                    internal channel buffer size (default 256)
+      --clientid string                   a user-provided string sent with every request to the brokers for logging debugging, and auditing purposes (default "kafka-cli")
+      --config string                     config file (default is $HOME/.kafka-cli.yaml)
+      --metadata.refresh duration         metadata refresh frequency (default 10m0s)
+      --metadata.retry.backoff duration   backoff between retrying (default 250ms)
+      --metadata.retry.max int            total number to request metadata when the cluster has a leader election (default 3)
+      --net.dialtimeout duration          timeout of dialing to brokers (default 30s)
+      --net.keepalive duration            keepalive period, 0 means disabled
+      --net.maxopenrequests int           How many outstanding requests a connection is allowed to have before sending on it blocks (default 5)
+      --net.readtimeout duration          timeout of reading messages (default 30s)
+      --net.writetimeout duration         timeout of writing messages (default 30s)
+
+Use "kafka-cli [command] --help" for more information about a command.
+```
+
 ## List all topics
 
 ```
