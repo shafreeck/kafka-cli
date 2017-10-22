@@ -73,7 +73,7 @@ func init() {
 	RootCmd.PersistentFlags().DurationVar(&cfg.Net.DialTimeout, "net.dialtimeout", 30*time.Second, "timeout of dialing to brokers")
 	RootCmd.PersistentFlags().DurationVar(&cfg.Net.ReadTimeout, "net.readtimeout", 30*time.Second, "timeout of reading messages")
 	RootCmd.PersistentFlags().DurationVar(&cfg.Net.WriteTimeout, "net.writetimeout", 30*time.Second, "timeout of writing messages")
-	RootCmd.PersistentFlags().IntVar(&cfg.Net.MaxOpenRequests, "net.maxopenrequests", 5, "How many outstanding requests a connection is allowed to have before sending on it blocks")
+	RootCmd.PersistentFlags().IntVar(&cfg.Net.MaxOpenRequests, "net.maxopenrequests", 5, "how many outstanding requests a connection is allowed to have before sending on it blocks")
 
 	RootCmd.PersistentFlags().DurationVar(&cfg.Net.KeepAlive, "net.keepalive", 0, "keepalive period, 0 means disabled")
 	RootCmd.PersistentFlags().IntVar(&cfg.ChannelBufferSize, "buffersize", 256, "internal channel buffer size")
