@@ -35,7 +35,7 @@ var consumerOpt consumerOptions
 // consumeCmd represents the consume command
 var consumeCmd = &cobra.Command{
 	Use:   "consume",
-	Short: "consume from kafka",
+	Short: "consume topic from kafka",
 	Run: func(cmd *cobra.Command, args []string) {
 		topics := args
 		if len(topics) == 0 {
@@ -44,11 +44,16 @@ var consumeCmd = &cobra.Command{
 			os.Exit(-1)
 		}
 
-		consumer, err := sarama.NewConsumerFromClient(c)
-		if err != nil {
-			fmt.Println(err)
-			os.Exit(-1)
+		exitOnError := func(err error) {
+			if err != nil {
+				fmt.Println(err)
+				os.Exit(-1)
+			}
 		}
+
+		consumer, err := sarama.NewConsumerFromClient(c)
+		exitOnError(err)
+		defer consumer.Close()
 
 		messages := make(chan *sarama.ConsumerMessage, cfg.ChannelBufferSize)
 		consume := func(ctx context.Context, pc sarama.PartitionConsumer) {
@@ -56,16 +61,12 @@ var consumeCmd = &cobra.Command{
 				select {
 				case msg := <-pc.Messages():
 					messages <- msg
+				case err := <-pc.Errors():
+					exitOnError(err)
 				case <-ctx.Done():
 					pc.Close()
 					return
 				}
-			}
-		}
-		exitOnError := func(err error) {
-			if err != nil {
-				fmt.Println(err)
-				os.Exit(-1)
 			}
 		}
 
@@ -124,6 +125,7 @@ func init() {
 	consumeCmd.Flags().Int32Var(&cfg.Consumer.Fetch.Max, "fetch.max", 0, "the maximum number of message bytes to fetch from the broker in a single request, 0 means no limit")
 	consumeCmd.Flags().DurationVar(&cfg.Consumer.Offsets.CommitInterval, "offsets.commitinterval", 1*time.Second, "how frequently to commit updated offsets")
 	consumeCmd.Flags().Int64Var(&cfg.Consumer.Offsets.Initial, "offsets.initial", sarama.OffsetNewest, "the initial offset to use if no offset was previously committed")
-	consumeCmd.Flags().Int64Var(&consumerOpt.Offset, "offset", sarama.OffsetNewest, "offset to consume")
+	consumeCmd.Flags().BoolVar(&cfg.Consumer.Return.Errors, "return.errors", true, "any errors that occurred while consuming are returned")
+	consumeCmd.Flags().Int64Var(&consumerOpt.Offset, "offset", sarama.OffsetNewest, "offset to consume(OffsetNewest=-1, OffsetOldest=-2)")
 	consumeCmd.Flags().Int32Var(&consumerOpt.Partition, "partition", -1, "partition to consume")
 }
