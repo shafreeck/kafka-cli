@@ -16,6 +16,7 @@ package cmd
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"strings"
 	"time"
@@ -26,9 +27,13 @@ import (
 )
 
 var cfgFile string
+
 var cfg *sarama.Config = sarama.NewConfig()
 var brokers string
+var zookeepers string
 var c sarama.Client
+
+var verbose bool
 
 // RootCmd represents the base command when called without any subcommands
 var RootCmd = &cobra.Command{
@@ -41,6 +46,11 @@ var RootCmd = &cobra.Command{
 	//Run: func(cmd *cobra.Command, args []string) { },
 	PersistentPreRun: func(cmd *cobra.Command, args []string) {
 		var err error
+
+		if verbose {
+			sarama.Logger = log.New(os.Stderr, "[kafka-cli] ", log.LstdFlags)
+		}
+
 		c, err = sarama.NewClient(strings.Split(brokers, ","), cfg)
 		if err != nil {
 			fmt.Println(err)
@@ -82,6 +92,8 @@ func init() {
 	RootCmd.PersistentFlags().DurationVar(&cfg.Metadata.Retry.Backoff, "metadata.retry.backoff", 250*time.Millisecond, "backoff between retrying")
 
 	RootCmd.PersistentFlags().StringVar(&brokers, "brokers", "127.0.0.1:9092", "broker list, delimited by comma")
+	RootCmd.PersistentFlags().StringVar(&zookeepers, "zookeepers", "127.0.0.1:9093", "zookeeper server list, delimited by comma, only use when operate topic")
+	RootCmd.PersistentFlags().BoolVarP(&verbose, "verbose", "v", false, "print log messages")
 }
 
 // initConfig reads in config file and ENV variables if set.
